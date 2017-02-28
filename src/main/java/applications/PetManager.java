@@ -16,21 +16,22 @@ import ui.PetManagerFrame;
 import ui.StatisticWindow;
 
 public class PetManager extends Observable {
-	
+
 	private List<Person> peopleList;
-	
+
 	public PetManager() {
 		peopleList = Person.findAll();
+		
 	}
-	
+
 	public List<Person> getPeopleList() {
 		return peopleList;
 	}
-	
+
 	public Person getPersonAt(int position) {
 		return peopleList.get(position);
 	}
-	
+
 	public void addPerson(Person person) {
 		peopleList.add(0,person);
 		person.save();
@@ -39,7 +40,7 @@ public class PetManager extends Observable {
 		up.addInserts(new int[] {0});
 		notifyObservers(up);
 	}
-	
+
 	public void removePeople(List<Person> pepoleToRemove) {
 		int[] removeIndexes = new int[pepoleToRemove.size()];
 		for(int i = 0; i < pepoleToRemove.size(); i++) {
@@ -53,7 +54,7 @@ public class PetManager extends Observable {
 		up.addDeletes(removeIndexes);
 		notifyObservers(up);
 	}
-	
+
 	public void setPerson(int position, Person personToReplace) {
 		personToReplace.save();
 		peopleList.set(position, personToReplace);
@@ -62,7 +63,7 @@ public class PetManager extends Observable {
 		up.addUpdates(new int[] {position});
 		notifyObservers(up);
 	}
-	
+
 	public double getAveragePetPerPerson() {
 		double sum = 0;
 		for(Person p : peopleList) {
@@ -82,7 +83,7 @@ public class PetManager extends Observable {
 				StatisticWindow toolbar = new StatisticWindow(editView, application);
 				toolbar.setVisible(true);
 				editView.setLocation(100, 100);
-				
+
 //				// Second view to test observer pattern
 //				PetManagerFrame editView2 = new PetManagerFrame(application);
 //				editView2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,7 +107,7 @@ public class PetManager extends Observable {
 			}
 		}
 	}
-	
+
 	private static void createTables() throws SQLException{
 		Connection connection = ActiveRecordManager.getConnection();
 		Statement stat = connection.createStatement();
@@ -115,5 +116,5 @@ public class PetManager extends Observable {
 		stat.executeUpdate("create table people (id INTEGER PRIMARY KEY AUTOINCREMENT, name, job);");
 		stat.executeUpdate("create table pet (id INTEGER PRIMARY KEY AUTOINCREMENT,owner INTEGER REFERENCES people(id), name, breed);");
 	}
-	
+
 }
